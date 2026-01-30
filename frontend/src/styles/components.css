@@ -1,0 +1,76 @@
+@layer components {
+
+    /* Glass Card */
+    .glass-card {
+        @apply backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl;
+    }
+
+    .glass-card-hover {
+        @apply glass-card hover:bg-white/[0.08] hover:border-white/20 transition-all duration-500 shadow-2xl shadow-black/20;
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+        @apply bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent;
+    }
+
+    /* Gradient Button */
+    .btn-gradient {
+        @apply bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105;
+    }
+
+    /* Animated Border */
+    .animated-border {
+        @apply relative;
+    }
+
+    .animated-border::before {
+        @apply absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300;
+        content: '';
+        background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #667eea);
+        background-size: 300% 300%;
+        animation: gradient 3s ease infinite;
+        z-index: -1;
+        padding: 2px;
+    }
+
+    .animated-border:hover::before {
+        @apply opacity-100;
+    }
+
+    /* Pulse Glow Effect */
+    .pulse-glow {
+        @apply animate-glow shadow-lg shadow-purple-500/50;
+    }
+
+    /* Floating Animation */
+    .float {
+        @apply animate-float;
+    }
+
+    /* Mesh Background */
+    .mesh-bg {
+        background:
+            radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.3) 0px, transparent 0%),
+            radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 0.3) 0px, transparent 50%),
+            radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 0.3) 0px, transparent 50%),
+            radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 0.3) 0px, transparent 50%),
+            radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 0.3) 0px, transparent 50%),
+            radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 0.3) 0px, transparent 50%),
+            radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 0.3) 0px, transparent 50%);
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
