@@ -61,17 +61,24 @@ router.post('/roast-website', async (req, res) => {
             return res.json(cached);
         }
 
-        // 2. Check for cached roast in DB (last 24 hours) as fallback
-        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-        const dbCachedRoast = await Lead.findOne({
-            type: 'roast',
-            message: `URL: ${url}`,
-            createdAt: { $gte: twentyFourHoursAgo }
-        });
+        // 2. Check for cached roast in DB (last 24 hours) as fallback - only if DB is available
+        const { isDBConnected } = require('../config/db');
+        if (isDBConnected()) {
+            try {
+                const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+                const dbCachedRoast = await Lead.findOne({
+                    type: 'roast',
+                    message: `URL: ${url}`,
+                    createdAt: { $gte: twentyFourHoursAgo }
+                });
 
-        if (dbCachedRoast) {
-            cache.set(cacheKey, dbCachedRoast.details); // Hydrate in-memory cache
-            return res.json(dbCachedRoast.details);
+                if (dbCachedRoast) {
+                    cache.set(cacheKey, dbCachedRoast.details); // Hydrate in-memory cache
+                    return res.json(dbCachedRoast.details);
+                }
+            } catch (dbErr) {
+                console.warn('DB lookup failed, continuing with AI:', dbErr.message);
+            }
         }
 
         const systemPrompt = `You are a brutally honest website critic with 20 years of UX/UI and marketing experience.
@@ -98,13 +105,19 @@ Be witty, be harsh, but be helpful. We want them to hire us to fix it.`;
 
         const parsed = parseAIResponse(response);
 
-        // Log to Database as a Lead
-        await Lead.create({
-            service: 'Website Roast',
-            message: `URL: ${url}`,
-            type: 'roast',
-            details: parsed
-        });
+        // Log to Database as a Lead - only if DB is available
+        if (isDBConnected()) {
+            try {
+                await Lead.create({
+                    service: 'Website Roast',
+                    message: `URL: ${url}`,
+                    type: 'roast',
+                    details: parsed
+                });
+            } catch (dbErr) {
+                console.warn('Failed to save roast to DB:', dbErr.message);
+            }
+        }
 
         // Store in memory cache
         cache.set(cacheKey, parsed);

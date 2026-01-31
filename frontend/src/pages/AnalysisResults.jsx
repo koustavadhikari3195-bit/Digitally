@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Loader2, CheckCircle, XCircle, ChevronRight, Share2, Download, Sparkles } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, Share2, Download, Sparkles } from 'lucide-react';
 import axios from 'axios';
 
 const AnalysisResults = () => {
@@ -10,19 +10,20 @@ const AnalysisResults = () => {
     const [isRewriting, setIsRewriting] = useState(false);
     const [rewrittenText, setRewrittenText] = useState(null);
 
-    // Mock data for immediate visualization if API fails or backend not running yet
-    const mockData = {
-        score: 72,
-        summary: "Strong technical skills but lacks quantifiable impact. The resume feels generic and doesn't stand out amongst senior candidates.",
-        top_skills: ["React", "Node.js", "MongoDB"],
-        missing_keywords: ["System Design", "CI/CD", "Cloud Architecture"],
-        critical_issues: ["Passive voice used frequently", "Summary is too vague"],
-        improvement_plan: ["Rewrite bullets using X-Y-Z formula", "Add specific metrics to project descriptions"],
-        job_match_prediction: "Mid-Level Frontend Developer"
-    };
-
     useEffect(() => {
         let isMounted = true;
+
+        // Mock data for immediate visualization if API fails or backend not running yet
+        const mockData = {
+            score: 72,
+            summary: "Strong technical skills but lacks quantifiable impact. The resume feels generic and doesn't stand out amongst senior candidates.",
+            top_skills: ["React", "Node.js", "MongoDB"],
+            missing_keywords: ["System Design", "CI/CD", "Cloud Architecture"],
+            critical_issues: ["Passive voice used frequently", "Summary is too vague"],
+            improvement_plan: ["Rewrite bullets using X-Y-Z formula", "Add specific metrics to project descriptions"],
+            job_match_prediction: "Mid-Level Frontend Developer"
+        };
+
         const fetchAnalysis = async () => {
             try {
                 const token = localStorage.getItem('token');

@@ -29,7 +29,7 @@ const SEOSection = () => {
                         Command the <span className="text-emerald-500">Search Landscape</span>
                     </h2>
                     <p className="text-xl text-text/60 max-w-2xl mx-auto leading-relaxed">
-                        Visibility is the ultimate competitive leverage. We don't just optimize—we dominate. Through technical authority and strategic content, we place your brand at the summit of every relevant search.
+                        Visibility is the ultimate competitive leverage. We don&apos;t just optimize—we dominate. Through technical authority and strategic content, we place your brand at the summit of every relevant search.
                     </p>
                 </div>
 

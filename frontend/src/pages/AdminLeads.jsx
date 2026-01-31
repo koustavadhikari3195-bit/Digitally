@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {
     Users,
     MessageSquare,
     Zap,
     Target,
-    Filter,
     ChevronDown,
     ChevronUp,
     Search,
     Clock,
-    CheckCircle,
     XCircle,
     Loader2
 } from 'lucide-react';
@@ -25,16 +23,7 @@ const AdminLeads = () => {
     const [search, setSearch] = useState('');
     const [expandedLead, setExpandedLead] = useState(null);
 
-    useEffect(() => {
-        const token = localStorage.getItem('adminToken');
-        if (!token) {
-            navigate('/admin/login');
-            return;
-        }
-        fetchLeads(token);
-    }, []);
-
-    const fetchLeads = async (token) => {
+    const fetchLeads = useCallback(async (token) => {
         try {
             const config = {
                 headers: { 'x-admin-auth': token || localStorage.getItem('adminToken') }
@@ -50,7 +39,16 @@ const AdminLeads = () => {
             }
             setLoading(false);
         }
-    };
+    }, [navigate]);
+
+    useEffect(() => {
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+            navigate('/admin/login');
+            return;
+        }
+        fetchLeads(token);
+    }, [fetchLeads, navigate]);
 
     const updateStatus = async (id, status) => {
         try {
@@ -201,7 +199,7 @@ const AdminLeads = () => {
                                             {lead.message && (
                                                 <div>
                                                     <p className="text-xs text-text/40 mb-1">Initial Message</p>
-                                                    <p className="text-text/80 text-sm italic">"{lead.message}"</p>
+                                                    <p className="text-text/80 text-sm italic">&quot;{lead.message}&quot;</p>
                                                 </div>
                                             )}
                                         </div>
@@ -216,7 +214,7 @@ const AdminLeads = () => {
                                                             <span className="text-xs font-bold text-text/60">Roast Score</span>
                                                             <span className={`text-xl font-black ${lead.details.score > 70 ? 'text-emerald-400' : 'text-red-400'}`}>{lead.details.score}</span>
                                                         </div>
-                                                        <p className="text-sm text-text/80 italic">"{lead.details.headline}"</p>
+                                                        <p className="text-sm text-text/80 italic">&quot;{lead.details.headline}&quot;</p>
                                                     </div>
                                                 )}
                                                 {lead.type === 'qualify' && (

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Cpu, Menu, X, Monitor, Palette, Sun, Moon, Zap, MessageSquare, FileText, Code, Search, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
@@ -7,6 +7,43 @@ import { useTheme } from '../context/ThemeContext';
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    // Handle hash-based scrolling when location changes
+    useEffect(() => {
+        if (location.hash) {
+            const element = document.querySelector(location.hash);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+    }, [location]);
+
+    // Handle anchor link clicks - navigate and scroll
+    const handleAnchorClick = (e, hash) => {
+        e.preventDefault();
+
+        // If we're already on the home page
+        if (location.pathname === '/') {
+            if (window.location.hash !== hash) {
+                // Changing hash triggers Home.jsx's hashchange listener, which handles mode switch & scrolling
+                window.location.hash = hash;
+            } else {
+                // Same hash? Just scroll manually since hashchange won't fire
+                const element = document.querySelector(hash);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        } else {
+            // Navigate to home page with hash
+            navigate(`/${hash}`);
+        }
+        setIsOpen(false);
+    };
 
     const themes = [
         { id: 'dark', icon: <Moon className="w-4 h-4" />, label: 'Dark' },
@@ -36,10 +73,10 @@ const Navbar = () => {
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-8">
                         <Link to="/" className="text-text/70 hover:text-primary font-medium transition-colors">Home</Link>
-                        <Link to="/#roast" className="text-red-500 hover:text-red-400 font-bold transition-all hover:scale-105 active:scale-95">🔥 Roast</Link>
-                        <Link to="/#marketing" className="text-text/70 hover:text-primary font-medium transition-all hover:translate-y-[-2px]">Marketing</Link>
-                        <Link to="/#web-dev" className="text-text/70 hover:text-primary font-medium transition-all hover:translate-y-[-2px]">Web Dev</Link>
-                        <Link to="/#seo" className="text-text/70 hover:text-primary font-medium transition-all hover:translate-y-[-2px]">SEO</Link>
+                        <a href="#roast" onClick={(e) => handleAnchorClick(e, '#roast')} className="text-red-500 hover:text-red-400 font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer">🔥 Roast</a>
+                        <a href="#marketing" onClick={(e) => handleAnchorClick(e, '#marketing')} className="text-text/70 hover:text-primary font-medium transition-all hover:translate-y-[-2px] cursor-pointer">Marketing</a>
+                        <a href="#web-dev" onClick={(e) => handleAnchorClick(e, '#web-dev')} className="text-text/70 hover:text-primary font-medium transition-all hover:translate-y-[-2px] cursor-pointer">Web Dev</a>
+                        <a href="#seo" onClick={(e) => handleAnchorClick(e, '#seo')} className="text-text/70 hover:text-primary font-medium transition-all hover:translate-y-[-2px] cursor-pointer">SEO</a>
                         <Link to="/dashboard" className="text-text/70 hover:text-primary font-medium transition-all hover:translate-y-[-2px]">Resume Tool</Link>
                         <Link to="/admin" className="text-text/30 hover:text-primary transition-all hover:scale-110" title="Admin Portal">
                             <ShieldCheck className="w-5 h-5" />
@@ -62,9 +99,9 @@ const Navbar = () => {
                             ))}
                         </div>
 
-                        <Link to="/#contact" className="btn-primary">
+                        <a href="#contact" onClick={(e) => handleAnchorClick(e, '#contact')} className="btn-primary cursor-pointer">
                             Get Quote
-                        </Link>
+                        </a>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -90,18 +127,18 @@ const Navbar = () => {
                             <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all">
                                 <Cpu className="w-5 h-5" /> Home
                             </Link>
-                            <Link to="/#roast" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/5 rounded-xl transition-all font-bold">
+                            <a href="#roast" onClick={(e) => handleAnchorClick(e, '#roast')} className="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/5 rounded-xl transition-all font-bold cursor-pointer">
                                 <Zap className="w-5 h-5" /> Roast My Site
-                            </Link>
-                            <Link to="/#marketing" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all">
+                            </a>
+                            <a href="#marketing" onClick={(e) => handleAnchorClick(e, '#marketing')} className="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all cursor-pointer">
                                 <MessageSquare className="w-5 h-5" /> Marketing
-                            </Link>
-                            <Link to="/#web-dev" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all">
+                            </a>
+                            <a href="#web-dev" onClick={(e) => handleAnchorClick(e, '#web-dev')} className="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all cursor-pointer">
                                 <Code className="w-5 h-5" /> Web Development
-                            </Link>
-                            <Link to="/#seo" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all">
+                            </a>
+                            <a href="#seo" onClick={(e) => handleAnchorClick(e, '#seo')} className="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all cursor-pointer">
                                 <Search className="w-5 h-5" /> SEO
-                            </Link>
+                            </a>
                             <Link to="/dashboard" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all font-medium">
                                 <FileText className="w-5 h-5" /> Resume ATS Tool
                             </Link>
@@ -129,9 +166,9 @@ const Navbar = () => {
                             </div>
 
                             <div className="pt-4">
-                                <Link to="/#contact" onClick={() => setIsOpen(false)} className="btn-primary w-full text-center py-4 text-lg">
+                                <a href="#contact" onClick={(e) => handleAnchorClick(e, '#contact')} className="btn-primary w-full text-center py-4 text-lg block cursor-pointer">
                                     Get a Free Quote
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </motion.div>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { UploadCloud, FileText, Loader2, AlertCircle, Clock, AlertTriangle } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -101,7 +101,7 @@ const Dashboard = () => {
 
         } catch (err) {
             console.error(err);
-            setError("Upload failed. Please try a valid PDF.");
+            setError("Upload failed. Please try a valid PDF, DOC, or DOCX file.");
         } finally {
             setUploading(false);
         }
@@ -109,7 +109,11 @@ const Dashboard = () => {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: { 'application/pdf': ['.pdf'] },
+        accept: {
+            'application/pdf': ['.pdf'],
+            'application/msword': ['.doc'],
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+        },
         multiple: false
     });
 
@@ -161,7 +165,7 @@ const Dashboard = () => {
                             {isDragActive ? "Drop here..." : "Upload your Resume"}
                         </h3>
                         <p className="text-text/60 mb-6 max-w-sm">
-                            Drag & drop your PDF here, or click to browse. We'll analyze it instantly.
+                            Drag & drop your PDF here, or click to browse. We&apos;ll analyze it instantly.
                         </p>
                         {error && (
                             <div className="flex items-center text-red-400 gap-2 mt-4 text-sm bg-red-900/20 px-4 py-2 rounded-lg">
