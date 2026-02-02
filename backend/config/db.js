@@ -33,6 +33,8 @@ const connectDB = async () => {
         cached.conn = await cached.promise;
     } catch (e) {
         cached.promise = null;
+        console.error("❌ MongoDB Connection Failed:", e.message);
+        // Do NOT process.exit(1) in Serverless! It causes 502s.
         throw e;
     }
 
