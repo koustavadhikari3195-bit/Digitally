@@ -40,7 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Health Check with Diagnostics
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
     const mongoose = require('mongoose');
     res.status(200).json({
         status: 'ok',
