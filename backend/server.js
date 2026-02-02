@@ -19,11 +19,16 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-// Determine upload directory: Use /tmp in production (serverless), local folder in dev
-const UPLOAD_DIR = process.env.NODE_ENV === 'production' ? os.tmpdir() : 'uploads';
+// Safe Upload Directory Logic
+const isServerless = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+const UPLOAD_DIR = isServerless ? os.tmpdir() : 'uploads';
 
-if (UPLOAD_DIR !== os.tmpdir() && !fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR);
+try {
+    if (UPLOAD_DIR !== os.tmpdir() && !fs.existsSync(UPLOAD_DIR)) {
+        fs.mkdirSync(UPLOAD_DIR);
+    }
+} catch (err) {
+    console.warn("⚠️ Could not create upload directory. functionality might be limited.", err.message);
 }
 
 app.use(smartCompress);
@@ -34,8 +39,21 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Health Check
-app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
+// Health Check with Diagnostics
+app.get('/health', (req, res) => {
+    const mongoose = require('mongoose');
+    res.status(200).json({
+        status: 'ok',
+        env: {
+            node_env: process.env.NODE_ENV,
+            is_serverless: isServerless,
+            has_mongo: !!process.env.MONGO_URI,
+            has_ai_key: !!process.env.OPENROUTER_API_KEY,
+            mongo_connected: mongoose.connection.readyState === 1
+        },
+        upload_dir: UPLOAD_DIR
+    });
+});
 
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
