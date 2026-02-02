@@ -91,10 +91,8 @@ Output STRICTLY as JSON:
 Analyze it as if you can see it (use your knowledge of common website patterns based on the domain/URL structure).
 Be witty, be harsh, but be helpful. We want them to hire us to fix it.`;
 
-        // Queue the AI request to handle concurrency
-        const response = await queue.add(async () => {
-            return await callAI(prompt, systemPrompt);
-        });
+        // Direct call for Serverless (Queue doesn't work well in Lambda)
+        const response = await callAI(prompt, systemPrompt);
 
         const parsed = parseAIResponse(response);
 
@@ -154,10 +152,8 @@ Output STRICTLY as JSON:
 
 Make them feel understood and create urgency without being pushy.`;
 
-        // Queue the AI request
-        const response = await queue.add(async () => {
-            return await callAI(prompt, systemPrompt);
-        });
+        // Direct call for Serverless
+        const response = await callAI(prompt, systemPrompt);
 
         const parsed = parseAIResponse(response);
 

@@ -17,7 +17,7 @@ const callAI = async (prompt, systemPrompt = "You are a helpful assistant.") => 
         const response = await axios.post(
             'https://openrouter.ai/api/v1/chat/completions',
             {
-                model: 'mistralai/mixtral-8x7b-instruct',
+                model: 'meta-llama/llama-3-8b-instruct:free', // Faster for Vercel Free Tier
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: prompt }
