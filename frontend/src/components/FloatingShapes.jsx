@@ -9,41 +9,42 @@ const FloatingShapes = () => {
     const opacityClass = isLight ? 'opacity-20' : 'opacity-100';
 
     // shapes data: { size, color, initial position, animation duration }
+    // shapes data: { size, color, initial position, animation duration }
     const shapes = [
         {
             type: "rounded-full",
-            width: "w-64", height: "h-64",
-            color: "bg-purple-500/10",
-            top: "10%", left: "5%",
-            duration: 20
-        },
-        {
-            type: "rounded-3xl", // Cube-ish
-            width: "w-40", height: "w-40",
-            color: "bg-blue-500/10",
-            top: "60%", right: "10%",
+            width: "w-64 md:w-96", height: "h-64 md:h-96",
+            color: "bg-purple-500/20",
+            top: "-10%", left: "-10%",
             duration: 25
         },
         {
-            type: "rounded-full",
-            width: "w-96", height: "h-96",
-            color: "bg-primary/5",
-            top: "30%", left: "40%",
+            type: "rounded-3xl",
+            width: "w-40 md:w-60", height: "h-40 md:h-60",
+            color: "bg-blue-500/15",
+            top: "40%", right: "-5%",
             duration: 30
         },
         {
-            type: "rotate-45 rounded-xl", // Diamond
-            width: "w-20", height: "h-20",
+            type: "rounded-full",
+            width: "w-72 md:w-[30rem]", height: "h-72 md:h-[30rem]",
+            color: "bg-primary/10",
+            bottom: "-10%", left: "30%",
+            duration: 35
+        },
+        {
+            type: "rotate-45 rounded-2xl",
+            width: "w-24 md:w-32", height: "h-24 md:h-32",
             color: "bg-pink-500/20",
-            bottom: "10%", left: "20%",
-            duration: 15
+            top: "20%", left: "15%",
+            duration: 20
         },
         {
             type: "rounded-full",
-            width: "w-32", height: "h-32",
-            color: "bg-emerald-500/10",
-            top: "80%", left: "70%",
-            duration: 18
+            width: "w-32 md:w-48", height: "h-32 md:h-48",
+            color: "bg-emerald-500/15",
+            bottom: "20%", right: "15%",
+            duration: 22
         }
     ];
 
