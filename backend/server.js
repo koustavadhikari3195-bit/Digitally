@@ -14,9 +14,16 @@ connectDB();
 const app = express();
 
 // Ensure uploads directory exists
+// Ensure uploads directory exists (Use /tmp for serverless/readonly envs)
 const fs = require('fs');
-if (!fs.existsSync('uploads')) {
-    fs.mkdirSync('uploads');
+const os = require('os');
+const path = require('path');
+
+// Determine upload directory: Use /tmp in production (serverless), local folder in dev
+const UPLOAD_DIR = process.env.NODE_ENV === 'production' ? os.tmpdir() : 'uploads';
+
+if (UPLOAD_DIR !== os.tmpdir() && !fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR);
 }
 
 app.use(smartCompress);
