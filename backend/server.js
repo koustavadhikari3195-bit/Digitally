@@ -65,7 +65,6 @@ app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 // SPA Fallback logic
-const path = require('path');
 const publicPath = path.join(__dirname, 'public');
 
 app.use(express.static(publicPath, {
