@@ -35,12 +35,14 @@ The project is set up for **Zero-Touch Deployment** using Google Cloud Run and G
     - `JWT_SECRET`: A secure random string for tokens.
     - `OPENROUTER_API_KEY`: API key from OpenRouter.
 
-### **Quick Start (Recommended for Speed):**
-For the fastest way to get a shareable link, use [Render.com](https://render.com).
-1.  Connect your GitHub repo.
-2.  Set **Root Directory** to `backend`.
-3.  Set **Build Command** to `npm run build` (This automatically builds the frontend and moves it to the server's public folder).
 4.  Set **Start Command** to `npm start`.
+
+### **No Credit Card? (Use Vercel):**
+If Render asks for a card, use [Vercel.com](https://vercel.com).
+1.  Connect your GitHub repo.
+2.  Vercel will detect my `vercel.json` automatically.
+3.  Add your `MONGO_URI` and `OPENROUTER_API_KEY` in the Environment Variables tab.
+4.  Click **Deploy**.
 
 ## 4. Local Development & Maintenance
 To run the project locally for testing or updates:
