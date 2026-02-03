@@ -13,12 +13,20 @@ const storage = multer.diskStorage({
 function checkFileType(file, cb) {
     const filetypes = /pdf|doc|docx/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
+
+    // Accept common MIME types for PDF and Word documents
+    const allowedMimeTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+
+    const mimetype = allowedMimeTypes.includes(file.mimetype) || filetypes.test(file.mimetype);
 
     if (extname && mimetype) {
         return cb(null, true);
     } else {
-        cb('Error: Resumes Only (PDF/DOC)!');
+        cb(new Error('Only PDF and Word documents (DOC/DOCX) are allowed!'));
     }
 }
 

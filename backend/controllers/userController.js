@@ -5,24 +5,26 @@ const generateToken = require('../utils/generateToken');
 // @route   POST /api/users
 // @access  Public
 const registerUser = async (req, res) => {
-    const { email } = req.body;
+    const { email, password } = req.body;
 
-    // Simple check
-    if (!email) {
+    if (!email || !password) {
         return res.status(400).json({ message: 'Please add all fields' });
     }
 
-    // Check if user exists
+    if (password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
     const userExists = await User.findOne({ email });
 
     if (userExists) {
         return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Create user
     const user = await User.create({
         email,
-        isVerified: true // Auto verify for simplicity as requested "simple auth"
+        password,
+        isVerified: true
     });
 
     if (user) {
@@ -38,15 +40,19 @@ const registerUser = async (req, res) => {
     }
 };
 
-// @desc    Login user (Mock for email-based)
+// @desc    Login user
 // @route   POST /api/users/login
 // @access  Public
 const loginUser = async (req, res) => {
-    const { email } = req.body;
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Please add all fields' });
+    }
 
     const user = await User.findOne({ email });
 
-    if (user) {
+    if (user && (await user.matchPassword(password))) {
         res.json({
             _id: user.id,
             email: user.email,

@@ -6,11 +6,12 @@ const Lead = require('../models/Lead');
 const { sendTelegram } = require('../utils/telegram');
 const cache = require('../utils/cache');
 const queue = require('../utils/queue');
+const { aiLimiter, strictLimiter } = require('../middleware/rateLimit');
 
 // @desc    AI Chat for agency assistant
 // @route   POST /api/ai/chat
 // @access  Public
-router.post('/chat', async (req, res) => {
+router.post('/chat', aiLimiter, async (req, res) => {
     try {
         const { message, history = [] } = req.body;
 
@@ -46,7 +47,7 @@ Rules:
 // @desc    Roast a website
 // @route   POST /api/ai/roast-website
 // @access  Public
-router.post('/roast-website', async (req, res) => {
+router.post('/roast-website', strictLimiter, async (req, res) => {
     try {
         const { url } = req.body;
 
@@ -141,7 +142,7 @@ Be witty, be harsh, but be helpful. We want them to hire us to fix it.`;
 // @desc    AI-powered lead qualification and recommendation
 // @route   POST /api/ai/qualify-lead
 // @access  Public
-router.post('/qualify-lead', async (req, res) => {
+router.post('/qualify-lead', aiLimiter, async (req, res) => {
     try {
         const { businessType, currentWebsite, biggestChallenge, budget, timeline } = req.body;
 
@@ -207,7 +208,7 @@ Make them feel understood and create urgency without being pushy.`;
 // @desc    Generate AI testimonial response
 // @route   POST /api/ai/generate-response  
 // @access  Public
-router.post('/generate-response', async (req, res) => {
+router.post('/generate-response', aiLimiter, async (req, res) => {
     try {
         const { clientName, projectType, feedback } = req.body;
 

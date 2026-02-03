@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const smartCompress = require('./middleware/compress');
 const connectDB = require('./config/db');
+const { apiLimiter } = require('./middleware/rateLimit');
 
 // Load env vars
 dotenv.config();
@@ -21,13 +22,41 @@ if (!fs.existsSync('uploads')) {
 
 app.use(smartCompress);
 
+// Apply global rate limiter to all routes
+app.use(apiLimiter);
+
+// CORS Configuration
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        const allowedOrigins = [
+            'http://localhost:5173',
+            'http://localhost:3000',
+            'http://127.0.0.1:5173',
+            'http://127.0.0.1:3000'
+        ];
+
+        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'production') {
+            callback(null, true);
+        } else {
+            callback(null, true); // Allow all in development for now
+        }
+    },
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
 // Middleware
-app.use(helmet());
-app.use(cors());
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Health Check
+// Health Check (exempt from rate limiting)
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
 // Routes

@@ -8,20 +8,6 @@ const protect = async (req, res, next) => {
         try {
             token = req.headers.authorization.split(' ')[1];
 
-            if (token === 'mock_token_for_now') {
-                let user = await User.findOne({ email: 'guest@digitally.com' });
-                if (!user) {
-                    user = await User.create({
-                        email: 'guest@digitally.com',
-                        plan: 'pro',
-                        credits: 9999,
-                        isVerified: true
-                    });
-                }
-                req.user = user;
-                return next();
-            }
-
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(decoded.id).select('-password');
 
@@ -48,21 +34,10 @@ const optionalProtect = async (req, res, next) => {
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
             token = req.headers.authorization.split(' ')[1];
-
-            if (token === 'mock_token_for_now') {
-                let user = await User.findOne({ email: 'guest@digitally.com' });
-                if (!user) {
-                    user = await User.create({ email: 'guest@digitally.com', plan: 'pro', credits: 9999, isVerified: true });
-                }
-                req.user = user;
-                return next();
-            }
-
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(decoded.id).select('-password');
             return next();
         } catch (error) {
-            console.error(error);
             return next();
         }
     }
