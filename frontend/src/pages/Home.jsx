@@ -31,18 +31,19 @@ const Home = () => {
     }, []);
 
     // Handle deep links and smooth scroll
+    // Handle deep links and smooth scroll
     useEffect(() => {
         const handleHash = () => {
             const hash = window.location.hash;
             if (hash) {
                 // Determine which mode the hash belongs to
-                const agencySections = ['#marketing', '#web-dev', '#seo', '#portfolio', '#service-hero'];
+                const agencySections = ['#marketing', '#web-dev', '#seo', '#portfolio', '#service-hero', '#contact'];
                 const labSections = ['#ai-tools', '#roast', '#qualify', '#resume-tool', '#showcase'];
 
                 if (agencySections.includes(hash)) {
-                    setViewMode('agency');
+                    if (viewMode !== 'agency') setViewMode('agency');
                 } else if (labSections.includes(hash)) {
-                    setViewMode('lab');
+                    if (viewMode !== 'lab') setViewMode('lab');
                 }
 
                 // Wait for mode switch and lazy load
@@ -52,10 +53,7 @@ const Home = () => {
                         const top = element.getBoundingClientRect().top + window.pageYOffset - 80;
                         window.scrollTo({ top, behavior: 'smooth' });
                     }
-                }, 400); // Slightly longer for lazy loads
-            } else {
-                // If no hash, scroll to top
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 600); // Increased delay to ensure lazy loaded components render
             }
         };
 

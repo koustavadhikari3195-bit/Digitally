@@ -17,17 +17,17 @@ const Footer = () => {
                     <div>
                         <h4 className="font-bold text-text mb-6">Services</h4>
                         <ul className="space-y-4 text-sm text-text/60">
-                            <li><a href="/#marketing" className="hover:text-primary transition-colors">Digital Marketing</a></li>
-                            <li><a href="/#web-dev" className="hover:text-primary transition-colors">Web Development</a></li>
-                            <li><a href="/#seo" className="hover:text-primary transition-colors">SEO Dominance</a></li>
+                            <li><a href="/#marketing" className="hover:text-primary transition-colors cursor-pointer">Digital Marketing</a></li>
+                            <li><a href="/#web-dev" className="hover:text-primary transition-colors cursor-pointer">Web Development</a></li>
+                            <li><a href="/#seo" className="hover:text-primary transition-colors cursor-pointer">SEO Dominance</a></li>
                         </ul>
                     </div>
                     <div>
                         <h4 className="font-bold text-text mb-6">AI Lab</h4>
                         <ul className="space-y-4 text-sm text-text/60">
-                            <li><a href="/#roast" className="hover:text-primary transition-colors">Website Roaster</a></li>
-                            <li><a href="/#resume-tool" className="hover:text-primary transition-colors">ATS Resume Tool</a></li>
-                            <li><a href="/#qualify" className="hover:text-primary transition-colors">Growth Plan AI</a></li>
+                            <li><a href="/#roast" className="hover:text-primary transition-colors cursor-pointer">Website Roaster</a></li>
+                            <li><a href="/#resume-tool" className="hover:text-primary transition-colors cursor-pointer">ATS Resume Tool</a></li>
+                            <li><a href="/#qualify" className="hover:text-primary transition-colors cursor-pointer">Growth Plan AI</a></li>
                         </ul>
                     </div>
                     <div>

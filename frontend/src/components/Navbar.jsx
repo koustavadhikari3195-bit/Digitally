@@ -25,14 +25,15 @@ const Navbar = () => {
     // Handle anchor link clicks - navigate and scroll
     const handleAnchorClick = (e, hash) => {
         e.preventDefault();
+        setIsOpen(false);
 
         // If we're already on the home page
         if (location.pathname === '/') {
             if (window.location.hash !== hash) {
-                // Changing hash triggers Home.jsx's hashchange listener, which handles mode switch & scrolling
+                // Changing hash triggers Home.jsx's hashchange listener
                 window.location.hash = hash;
             } else {
-                // Same hash? Just scroll manually since hashchange won't fire
+                // If hash is the same, force scroll manually
                 const element = document.querySelector(hash);
                 if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -42,7 +43,6 @@ const Navbar = () => {
             // Navigate to home page with hash
             navigate(`/${hash}`);
         }
-        setIsOpen(false);
     };
 
     const themes = [
