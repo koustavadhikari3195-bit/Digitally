@@ -29,13 +29,14 @@ Rules:
 3. Always guide toward booking a consultation
 4. Never make up pricing - say "Let's discuss on a call"`;
 
+        // Build message array with history
         const messages = [
             { role: 'system', content: systemPrompt },
             ...history.map(h => ({ role: h.role, content: h.content })),
             { role: 'user', content: message }
         ];
 
-        const response = await callAI(message, systemPrompt);
+        const response = await callAI(message, systemPrompt, messages);
 
         res.json({ reply: response });
     } catch (error) {

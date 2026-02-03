@@ -1,15 +1,18 @@
 const axios = require('axios');
 
-const callAI = async (prompt, systemPrompt = "You are a helpful assistant.") => {
+const callAI = async (prompt, systemPrompt = "You are a helpful assistant.", messages = null) => {
     try {
+        // Support both simple prompt and message array for chat history
+        const messageArray = messages || [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: prompt }
+        ];
+
         const response = await axios.post(
             'https://openrouter.ai/api/v1/chat/completions',
             {
                 model: 'mistralai/mixtral-8x7b-instruct', // Good balance of performance/cost
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: prompt }
-                ],
+                messages: messageArray,
                 response_format: { type: 'json_object' } // Ensure deterministic JSON
             },
             {

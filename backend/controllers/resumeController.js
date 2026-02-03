@@ -3,6 +3,7 @@ const User = require('../models/User');
 const { callAI } = require('../utils/aiClient');
 const fs = require('fs');
 const pdf = require('pdf-parse');
+const mammoth = require('mammoth');
 
 const { parseAIResponse } = require('../utils/parser');
 
@@ -18,9 +19,24 @@ const uploadResume = async (req, res) => {
         let parsedText = "";
 
         if (req.file.mimetype === 'application/pdf') {
-            const dataBuffer = fs.readFileSync(req.file.path);
-            const data = await pdf(dataBuffer);
-            parsedText = data.text;
+            try {
+                const dataBuffer = fs.readFileSync(req.file.path);
+                const data = await pdf(dataBuffer);
+                parsedText = data.text;
+            } catch (pdfError) {
+                console.error("PDF parsing error:", pdfError);
+                parsedText = "Error extracting text from PDF. The file may be corrupted or image-based.";
+            }
+        } else if (req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+            req.file.mimetype === 'application/msword') {
+            try {
+                const dataBuffer = fs.readFileSync(req.file.path);
+                const result = await mammoth.extractRawText({ buffer: dataBuffer });
+                parsedText = result.value;
+            } catch (docError) {
+                console.error("Word document parsing error:", docError);
+                parsedText = "Error extracting text from Word document.";
+            }
         } else {
             parsedText = "Text extraction for this format not yet implemented.";
         }
@@ -85,8 +101,8 @@ const analyzeResume = async (req, res) => {
             };
             await resume.save();
 
-            // Deduct credit if user is logged in
-            if (req.user && req.user.plan === 'free') {
+            // Deduct credit if user is logged in and on free plan
+            if (req.user && user && req.user.plan === 'free') {
                 user.credits -= 1;
                 await user.save();
             }
